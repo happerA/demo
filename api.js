@@ -132,4 +132,67 @@ a ^= b;
 b ^= a;
 a ^= b;
 
-//
+//数字字符转化为数字
+var a = '1223'
+a = +a;
+//最短数组去重
+[...new Set([1, 2.2, 1, 2, 3, 1, 3, 4, 5, 6, 4])]
+//长度为6 值为8
+Array(6).fill(8)
+
+//arguments 转化为数组
+var argArray = Object.prototype.slice.call(arguments);
+var argArray = Array.from(arguments)
+var argArray = [...arguments];
+
+//时间戳
+new Date().getTime() +
+    new Date()
+
+//使用~x.indexOf('y')简化 x.indexOf('y')>-1
+if (str.indexOf('lo') > -1) {
+    //
+}
+if (~str.indexOf('lo')) {
+    //
+}
+//parseInt Number 
+//解析和转化 解析允许字符串有非数字 从左到右解析直到非数字转化不允许有非数字
+var a = '530px'
+var b = '530';
+parseInt(a) //530
+Number(a) //NaN
+parseInt(b) //530
+Number(b) //530
+
+//+拼接操作 +x or String(x)
+//a+''隐式转化使用valueof String()使用toString()
+[1, 2] + [3, 4]; // "1,23,4"不能通过valueof得到剪短基本类型使用toString()
+
+//数字字面量 像对象那个一样使用
+//2.toString() 会报错
+2..toString()
+    //2 .toString()
+    (2).toString()
+
+//四舍五入
+11212.1212.toFixed(2)
+
+//v: 值p:精度
+function round(v, p) {
+    p = Math.pow(10, p >> 31 ? 0 : p | 0)
+    v *= p
+    return (v + 0.5 + (v >> 31) | 0) / p
+}
+round(123.23, 2)
+
+//uuid
+function uuId() {
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxxxxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random() * 16) % 16 | 0
+        d = Math.floor(d / 16)
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16)
+    })
+    return uuid
+}
