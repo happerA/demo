@@ -1,0 +1,56 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge, chrome=1">
+    <title></title>
+    <style>
+        #container {
+            width: 100%;
+            height: 200px;
+            line-height: 200px;
+            text-align: center;
+            color: #fff;
+            background: #444;
+            font-size: 30px;
+        }
+        
+        .rounds {
+            display: flex;
+            width: 100%
+        }
+        
+        .round {
+            flex: 1;
+            margin: 20px;
+            color: #fff;
+            line-height: 100%;
+            text-align: center;
+        }
+        
+        .round span {
+            display: inline-block;
+            width: 100%;
+            height: 0;
+            padding-bottom: 100%;
+            background-color: rgb(4, 0, 255);
+            border-radius: 50%;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="rounds">
+        <div class="round white">1<span></span></div>
+        <div class="round red">2<span></span></div>
+        <div class="round blue">3<span></span></div>
+    </div>
+    <script src="kodo.js">
+    </script>
+    <script>
+        console.log(f('#contain'))
+    </script>
+</body>
+
+</html>
