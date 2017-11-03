@@ -196,3 +196,98 @@ function uuId() {
     })
     return uuid
 }
+//bind
+//简易版
+Function.prototype.bind = function(context) {
+    var self = this;
+    return self.apply(context, arguments)
+}
+
+//健壮版
+Function.prototype.bind = function(context) {
+    var arg = Array.prototype.slice.call(arguments, 1);
+    var self = this;
+    return function() {
+        var innerArg = Array.prototype.slice.call(arguments);
+        var finalArg = arg.concat(innerArg);
+        return self.apply(context, finalArg)
+    }
+}
+
+//deepclone()
+const isObj = obj => Object.prototype.toString(obj) === '[Object object]'
+const isAr = arr => Array.isArray(arr)
+
+function deepClone(tar) {
+    if (tar === null || typeof tar !== 'object') {
+        return tar
+    }
+    let newObj = isAr(tar) ? [] : {}
+    for (let key in tar) {
+        if (tar.hasOwnProperty(key)) {
+            let value = tar[key]
+            if (value === tar) {
+                continue
+            }
+            if (isObj(value) || isAr(value)) {
+                newObj[key] = deepClone(value)
+            } else {
+                newObj[key] = value
+            }
+        }
+    }
+    return newObj
+}
+
+//lazyman
+//lazy = new lazyman().sleep(1).sleepFirst(2).eat(1)
+function lazyman() {
+    console.log('hello lazy')
+    this.tasks = []
+    setTimeout(function() {
+        var fn = this.tasks.shift()
+        fn()
+    }.bind(this), 0)
+}
+lazyman.prototype = {
+    next() {
+        var fn = this.tasks.shift()
+        fn && fn()
+    },
+    sleep(sec) {
+        sec = sec || 0
+        var self = this
+        var fn = function() {
+            setTimeout(function() {
+                console.log('sleep' + sec)
+                self.next()
+            }, sec * 1000)
+        }
+        this.tasks.push(fn)
+        return this;
+    },
+    eat(sec) {
+        sec = sec || 0
+        var self = this
+        var fn = function() {
+            setTimeout(function() {
+                console.log('eat' + sec)
+                self.next()
+            }, sec * 1000)
+        }
+        this.tasks.push(fn)
+        return this;
+    },
+    sleepFirst(sec) {
+        sec = sec || 0
+        var self = this
+        var fn = function() {
+            setTimeout(function() {
+                console.log('sleep first' + sec)
+                self.next()
+            }, sec * 1000)
+        }
+        this.tasks.unshift(fn)
+        return this;
+    }
+}
