@@ -1,0 +1,19 @@
+<html>
+
+<head></head>
+
+<body>
+    <div id="test">
+        <h2 x-html="a"></h2>
+        <p>{{ a }}</p>
+    </div>
+</body>
+<script src="./util.js"></script>
+<script>
+    var data = {
+        a: 'hello'
+    }
+    new Compile('#test', data)
+</script>
+
+</html>
