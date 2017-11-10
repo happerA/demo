@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<script>
+(function() {
+	var ctx = document.body.appendChild(document.createElement('canvas')).getContext('2d');
+	var w = ctx.canvas.width=550;var h = ctx.canvas.height=250;
+	var r = Math.random, p = Math.PI;
+	var a=[],k;
+	setInterval(function() {
+           
+           ctx.fillStyle = 'rgba(0,0,0,.5)';
+           ctx.fillRect(0,0,w,h);
+           var i = 10;
+           
+           while(i--) {
+               a.push({x:w/2,y:h/6,c:"#fff",t:0,r:r()*3,vx:r()*10-5,vy:r()-5}) 
+           }
+           for(var i=0;i<a.length;i++) {
+           	   k =a[i];
+           	   ctx.fillStyle=k.c;
+               ctx.beginPath();
+               ctx.arc(k.x, k.y, k.r, 0, p*2)
+               ctx.fill();
+               k.x+=k.vx;
+           	   k.y+= k.vy;
+           	   k.vy+=.2;
+               k.r -= .01;
+               if(k.y>h){k.vy*=-.5;k.y=h;k.r+=0.01}
+               if(k.r<0){a.splice(i,1)}
+           } 
+	},20) 
+})()
+</script>
+</body>
+</html>

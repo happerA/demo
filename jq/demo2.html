@@ -1,0 +1,141 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge, chrome=1">
+    <title>爆炸</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            position: relative;
+            width: 100%;
+            margin: 0 auto;
+            height: 300px;
+        }
+        
+        .pic2 {
+            position: absolute;
+            left: 20px;
+            top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <img class='pic2' src="./images.jpg">
+        <button class="sub">ok</button>
+    </div>
+    <script>
+        (function() {
+            var container = document.querySelector('.container');
+            var img = document.querySelector('.pic2');
+            var sub = document.querySelector('.sub');
+            var elemArr;
+            var timer;
+            img.onload = function() {
+                elemArr = init();
+            }
+            sub.addEventListener('click', function() {
+                elemArr.forEach(item => {
+                    container.appendChild(item)
+                })
+                img.style.opacity = 0;
+                timer = setInterval(doMove, 30);
+            })
+
+            function init() {
+                var pois = img.getBoundingClientRect(),
+                    imgUrl = './images.jpg',
+                    elemCss = {
+                        width: pois.width,
+                        height: pois.height,
+                        left: pois.left,
+                        top: pois.top
+                    },
+                    miniNum = 10,
+                    widthNum = 0,
+                    heightNum = 0,
+                    // div 小块的宽度
+                    newElemWidth = 0,
+                    i = 0,
+                    j = 0,
+                    elemArr = [];
+                var basePoint = elemCss.width > elemCss.height ? elemCss.height : elemCss.width;
+                if (basePoint === elemCss.width) {
+                    newElemWidth = Math.floor(elemCss.width / miniNum)
+                    heightNum = Math.floor(elemCss.height / newElemWidth)
+                    widthNum = miniNum
+                } else {
+                    newElemWidth = Math.floor(elemCss.height / miniNum)
+                    heightNum = Math.floor(elemCss.width / newElemWidth)
+                    widthNum = miniNum
+                }
+                if (elemCss.height > elemCss.width) {
+                    widthNum = widthNum ^ heightNum;
+                    heightNum = heightNum ^ widthNum;
+                    widthNum = widthNum ^ heightNum;
+                }
+
+                for (; i < widthNum; i++) {
+                    for (; j < heightNum; j++) {
+                        var randomSize = Math.random() * 3,
+                            newEle = document.createElement('div'),
+                            cssTop = i * newElemWidth,
+                            cssLeft = j * newElemWidth,
+                            posiEleCss = {
+                                'backgroundImage': 'url(' + imgUrl + ')',
+                                'backgroundRepeat': 'no-repeat',
+                                'backgroundPosition': '-' + cssLeft + 'px -' + cssTop + 'px',
+                                position: 'absolute',
+                                left: cssLeft + elemCss.left,
+                                top: cssTop + elemCss.top,
+                                width: newElemWidth,
+                                height: newElemWidth,
+                                'borderRadius': '100%',
+                                transform: 'scale(' + randomSize + ')',
+                                opacity: 1
+                            };
+                        Object.keys(posiEleCss).forEach(key => {
+                            newEle.style[key] = posiEleCss[key]
+                        })
+                        newEle.speedX = Math.sin(Math.random() * 180 * 360 / Math.PI) * 10 * Math.random();
+                        newEle.speedY = Math.cos(Math.random() * 180 * 360 / Math.PI) * 10 * Math.random();
+                        elemArr.push(newEle)
+                    }
+                    j = 0;
+                }
+                return elemArr;
+            }
+
+            function doMove() {
+                elemArr = container.getElementsByTagName('div');
+                if (elemArr.length <= 0) {
+                    clearInterval(timer)
+                    elemArr = init();
+                    img.style.opacity = 1;
+                    return;
+                }
+                for (var i = 0; i < elemArr.length; i++) {
+                    elemArr[i].style.position = 'absolute';
+                    elemArr[i].style.left = elemArr[i].offsetLeft + elemArr[i].speedX + 'px';
+                    elemArr[i].style.top = elemArr[i].offsetTop + elemArr[i].speedY + 'px';
+                    elemArr[i].style.opacity -= 0.05 * Math.random();
+                    //elemArr[i].style.opacity = elemArr[i].style.opacity - Math.random() * 0.01;
+                    if (elemArr[i].offsetLeft < 0 || elemArr[i].offsetLeft > document.documentElement.clientWidth || elemArr[i].offsetTop < 0 || elemArr[i].offsetTop > document.documentElement.clientHeight || elemArr[i].style.opacity < 0) {
+                        console.log(elemArr[i].style.left)
+                        console.log(elemArr[i].style.top)
+                        container.removeChild(elemArr[i]);
+                        [].slice.call(elemArr).splice(i, 1);
+                    }
+                }
+            }
+        })()
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .wrap {
+        /*flex
+        display: flex;
+        flex-direction: row-reverse;*/
+        /*书写方式
+        direction: rtl;
+        width: 100%;
+        font-size: 0;
+        */
+      }
+      .wrap span {
+        width: 100px;
+        height: 100px;
+        font-size: 16px;
+        transform: scale(1);
+        /*float*/
+        float: right;
+        /*书写方式*/
+        display: inline-block;
+        margin-left: -30px;
+        text-align: center;
+        line-height: 100px;
+        border: 3px solid #000;
+        border-radius: 50%;
+        overflow: hidden;
+        background-color: rgb(255, 0, 0);
+        background-image: url(http://lab.tianyizone.com/caniuse.png);
+        background-size: cover;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <span>1</span>
+      <span>2</span>
+      <span>3</span>
+      <span>4</span>
+      <span>5</span>
+      <span>6</span>
+    </div>
+  </body>
+</html>
