@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>example</title>
+    <script src="./util.js" charset="utf-8"></script>
+</head>
+
+<body>
+</body>
+<script>
+    var promise = new Promise((resolve) => {
+        setTimeout(() => {
+            resolve('haha')
+        }, 1000)
+    })
+    var a = promise.then(function onSuccess() {})
+    var b = promise.catch(function onError() {})
+    console.dir(promise, {
+        depth: 10
+    })
+    console.log(promise._childArr[0] === a)
+    console.log(promise._childArr[1] === b)
+</script>
+
+</html>

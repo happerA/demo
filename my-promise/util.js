@@ -229,4 +229,68 @@ Promise.reject = function(reason) {
         reject(reason)
     })
 }
-Promise.all = function(arr) {}
+Promise.all = function(arr) {
+    let newPromise = new Promise(noop),
+        value = [],
+        num = 0
+    if (({}).toString.call(arr) === '[object Array') {
+        try {
+            arr.forEach((k, index) => {
+                if (k instanceof Promise) {
+                    let timer = setInterval(() => {
+                        if (k._status === FULFILLED) {
+                            value[index] = k._result;
+                            num++
+                            clearInterval(timer)
+                            if (num == arr.length) {
+                                fulfill(newPromise, value)
+                            }
+                        } else if (k._status == REJECTED) {
+                            reject(newPromise, k._result)
+                            clearInterval(timer)
+                        }
+                    }, 0)
+                } else {
+                    value[index] = k
+                    num++
+                    if (num === arr.length) {
+                        fulfill(newPromise, value)
+                    }
+                }
+            })
+        } catch (e) {
+            reject(newPromise, e)
+        }
+    } else {
+        reject(newPromise, new TypeError('参数应为promsie数组'))
+    }
+    return newPromise
+}
+
+Promise.race = function(arr) {
+    let newPromise = new Promise(noop)
+    if (({}).toString.call(arr) === '[object Array]') {
+        try {
+            arr.forEach((k, index) => {
+                if (k instanceof Promise) {
+                    let timer = setInterval(() => {
+                        if (k._status === FULFILLED) {
+                            fulfill(newPromise, k._result)
+                            clearInterval(timer)
+                        } else if (k._status === REJECTED) {
+                            reject(newPromise, k._result)
+                            clearInterval(timer)
+                        }
+                    }, 0)
+                } else {
+                    fulfill(newPromise, value)
+                }
+            })
+        } catch (e) {
+            reject(newPromise, e)
+        }
+    } else {
+        reject(newPromise, new TypeError('参数需是个promise数组'))
+    }
+    return newPromise
+}
