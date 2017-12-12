@@ -1,0 +1,134 @@
+<html>
+
+<head>
+    <title>vuetouch</title>
+    <style>
+        .box {
+            width: 400px;
+            height: 400px;
+            background: #333;
+            color: #fff;
+            line-height: 400px;
+            font-size: 50px;
+            text-align: center
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box" id="app" v-tap="{fn:vuetap,name:'click'}" v-longtap="{fn:vuetap,name:'long click'}" v-swipeleft="{fn:vuetap,name:'left'}" v-swiperight="{fn:vuetap,name:'right'}" v-swipeup="{fn:vuetap,name:'up'}" v-swipedown="{fn:vuetap,name:'down'}">{{name}}</div>
+    <script src="https://unpkg.com/vue"></script>
+    <script>
+        function vueTouch(el, fn, type) {
+            var me = this;
+            this.obj = el;
+            this.fn = fn;
+            this.touchType = type;
+            this.Vuetouches = {
+                x: 0,
+                y: 0
+            };
+            this.VueMove = true;
+            this.Vueleave = true;
+            this.longTouch = true;
+            this.vueCallback = typeof(fn.value) == 'object' ? fn.value.fn : fn.value;
+            this.obj.addEventListener('touchstart', function(e) {
+                me.start(e);
+            }, false);
+            this.obj.addEventListener('touchend', function(e) {
+                me.end(e);
+            }, false);
+            this.obj.addEventListener('touchmove', function(e) {
+                me.move(e);
+            }, false);
+        }
+        vueTouch.prototype = {
+            start: function(e) {
+                this.VueMove = true;
+                this.Vueleave = true;
+                this.longTouch = true;
+                this.Vuetouches = {
+                    x: e.changedTouches[0].pageX,
+                    y: e.changedTouches[0].pageY
+                }
+                this.time = setTimeout(function() {
+                    if (this.Vueleave && this.VueMove) {
+                        this.touchType == 'longtap' && this.vueCallback(this.fn.value, e)
+                        this.longTouch = false
+                    }
+                }.bind(this), 1000)
+            },
+            end: function(e) {
+                var dix = e.changedTouches[0].pageX - this.Vuetouches.x;
+                var diy = e.changedTouches[0].pageY - this.Vuetouches.y;
+                clearTimeout(this.time)
+                if (Math.abs(dix) > 10 || Math.abs(diy) > 10) {
+                    if (Math.abs(dix) > Math.abs(diy)) {
+                        if (dix > 0) {
+                            this.touchType == 'swiperight' && this.vueCallback(this.fn.value, e)
+                        } else {
+                            this.touchType == 'swipeleft' && this.vueCallback(this.fn.value, e)
+                        }
+                    } else {
+                        if (diy > 0) {
+                            this.touchType == 'swipeup' && this.vueCallback(this.fn.value, e)
+                        } else {
+                            this.touchType == 'swipedown' && this.vueCallback(this.fn.value, e)
+                        }
+                    }
+                } else {
+                    if (this.longTouth && this.VueMove) {
+                        this.touchType == 'tap' && this.vueCallback(this.fn.value, e)
+                        this.Vueleave = false
+                    }
+                }
+            },
+            move: function(e) {
+                this.vueMove = false
+            }
+        }
+        Vue.directive('tap', {
+            bind: function(el, fn) {
+                new vueTouch(el, fn, 'tap')
+            }
+        })
+        Vue.directive('longtap', {
+            bind: function(el, fn) {
+                new vueTouch(el, fn, 'longtap')
+            }
+        })
+        Vue.directive('swipeleft', {
+            bind: function(el, fn) {
+                new vueTouch(el, fn, 'swipeleft')
+            }
+        })
+        Vue.directive('swiperight', {
+            bind: function(el, fn) {
+                new vueTouch(el, fn, 'swiperight')
+            }
+        })
+        Vue.directive('swipedown', {
+            bind: function(el, fn) {
+                new vueTouch(el, fn, 'swipedown')
+            }
+        })
+        Vue.directive('swipeup', {
+            bind: function(el, fn) {
+                new vueTouch(el, fn, 'swipeup')
+            }
+        })
+        var app = new Vue({
+            el: '#app',
+            data: {
+                name: ''
+            },
+            methods: {
+                vuetap: function(s) {
+                    this.name = s.name
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

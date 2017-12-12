@@ -39,13 +39,19 @@
             var timer;
             img.onload = function() {
                 elemArr = init();
+
             }
             sub.addEventListener('click', function() {
+                elemArr = init();
+                var str = ''
                 elemArr.forEach(item => {
-                    container.appendChild(item)
+                    str += item.outerHTML;
                 })
+                console.log(container.innerHTML)
+                container.innerHTML += str;
+                img = document.querySelector('.pic2');
                 img.style.opacity = 0;
-                timer = setInterval(doMove, 30);
+                timer = setInterval(doMove, 50);
             })
 
             function init() {
@@ -103,8 +109,8 @@
                         Object.keys(posiEleCss).forEach(key => {
                             newEle.style[key] = posiEleCss[key]
                         })
-                        newEle.speedX = Math.sin(Math.random() * 180 * 360 / Math.PI) * 10 * Math.random();
-                        newEle.speedY = Math.cos(Math.random() * 180 * 360 / Math.PI) * 10 * Math.random();
+                        newEle.setAttribute('data-speedx', Math.sin(Math.random() * 180 * 360 / Math.PI) * 20 * Math.random());
+                        newEle.setAttribute('data-speedy', Math.cos(Math.random() * 180 * 360 / Math.PI) * 20 * Math.random());
                         elemArr.push(newEle)
                     }
                     j = 0;
@@ -117,14 +123,14 @@
                 if (elemArr.length <= 0) {
                     clearInterval(timer)
                     elemArr = init();
-                    img.style.opacity = 1;
+                    //img.style.opacity = 1;
                     return;
                 }
                 for (var i = 0; i < elemArr.length; i++) {
                     elemArr[i].style.position = 'absolute';
-                    elemArr[i].style.left = elemArr[i].offsetLeft + elemArr[i].speedX + 'px';
-                    elemArr[i].style.top = elemArr[i].offsetTop + elemArr[i].speedY + 'px';
-                    elemArr[i].style.opacity -= 0.05 * Math.random();
+                    elemArr[i].style.left = (elemArr[i].offsetLeft + parseFloat(elemArr[i].dataset.speedx)) + 'px';
+                    elemArr[i].style.top = (elemArr[i].offsetTop + parseFloat(elemArr[i].dataset.speedy)) + 'px';
+                    elemArr[i].style.opacity -= 0.4 * Math.random();
                     //elemArr[i].style.opacity = elemArr[i].style.opacity - Math.random() * 0.01;
                     if (elemArr[i].offsetLeft < 0 || elemArr[i].offsetLeft > document.documentElement.clientWidth || elemArr[i].offsetTop < 0 || elemArr[i].offsetTop > document.documentElement.clientHeight || elemArr[i].style.opacity < 0) {
                         console.log(elemArr[i].style.left)

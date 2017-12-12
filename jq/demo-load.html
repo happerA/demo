@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>load animation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .contain {
+            width: 100px;
+            height: 100px;
+            color: black;
+        }
+        
+        .load {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            box-sizing: border-box;
+            border: 4px solid transparent;
+        }
+        
+        .load:after,
+        .load:before {
+            content: '';
+            position: absolute;
+            border: 4px solid transparent;
+            box-sizing: border-box;
+            animation-direction: alternate;
+            animation-timing-function: linear;
+        }
+        
+        .load:after {
+            bottom: 0;
+            right: 0;
+            border-left-color: black;
+            border-bottom-color: black;
+            animation: after-animate 1.5s infinite;
+            animation-direction: alternate;
+        }
+        
+        .load:before {
+            top: 0;
+            left: 0;
+            border-top-color: black;
+            border-right-color: black;
+            animation: before-animate 1.5s infinite;
+            animation-direction: alternate;
+        }
+        
+        @keyframes before-animate {
+            0% {
+                width: 0;
+                height: 0;
+                border-right-color: transparent;
+            }
+            9.99% {
+                border-right-color: transparent;
+            }
+            10% {
+                height: 0;
+                width: 100%;
+                border-right-color: black;
+            }
+            25%,
+            100% {
+                width: 100%;
+                height: 100%;
+            }
+        }
+        
+        @keyframes after-animate {
+            0%,
+            24.99% {
+                width: 0;
+                height: 0;
+                border-left-color: transparent;
+                border-bottom-color: transparent;
+            }
+            40% {
+                height: 0;
+                width: 100%;
+                border-left-color: black;
+                border-bottom-color: black;
+            }
+            55%,
+            100% {
+                width: 100%;
+                height: 100%;
+            }
+        }
+        
+        .red,
+        .white,
+        .yellow {
+            position: absolute;
+            box-sizing: border-box;
+        }
+        
+        .red {
+            top: 4px;
+            left: 0;
+            bottom: 0;
+            border-right: 4px solid black;
+            background: red;
+            animation: red 1.5s infinite;
+            animation-direction: alternate;
+        }
+        
+        .white {
+            top: 4px;
+            right: 4px;
+            border-left: 4px solid black;
+            background: #fff;
+            height: 42px;
+            animation: red 1.5s infinite;
+            animation-direction: alternate;
+        }
+        
+        .yellow {
+            bottom: 4px;
+            right: 4px;
+            border-top: 4px solid black;
+            background: #F3B93F;
+            width: 58px;
+            animation: yellow 1.5s infinite;
+            animation-direction: alternate;
+        }
+        
+        @keyframes red {
+            0%,
+            55% {
+                width: 0;
+                opacity: 0;
+            }
+            55.1% {
+                opacity: 1;
+            }
+            70%,
+            100% {
+                width: 34px;
+                opacity: 1;
+            }
+        }
+        
+        @keyframes yellow {
+            0%,
+            70% {
+                height: 0;
+                opacity: 0;
+            }
+            70.1% {
+                opacity: 1;
+                height: 0;
+            }
+            85%,
+            100% {
+                height: 46px;
+                opacity: 1;
+            }
+        }
+        
+        @keyframes white {
+            0%,
+            85% {
+                width: 0;
+                opacity: 0;
+            }
+            85.1% {
+                width: 0;
+                opacity: 1;
+            }
+            100% {
+                width: 30px;
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="contain">
+        <div class="load">
+            <div class="red"></div>
+            <div class="yellow"></div>
+            <div class="white"></div>
+        </div>
+
+    </div>
+    <script>
+        setTimeout(function() {
+            console.log(1)
+        }, 1500)
+    </script>
+</body>
+
+</html>

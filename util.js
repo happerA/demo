@@ -1439,3 +1439,36 @@ function add() {
     }
     return fn;
 }
+
+//多重继承
+function parent1(param) {
+    this.param = param
+}
+
+function parent2(param) {
+    this.param = param
+}
+parent1.prototype.fn1 = function() {
+    console.log('p1+fn1')
+}
+parent2.prototype.fn2 = function() {
+    console.log('p2+fn2')
+}
+
+function subFn(child) {
+    var F = function() {}
+    for (var i = 0; i < arguments.length; i++) {
+        var keys = Object.keys(arguments[i].prototype)
+        for (var j = 0; j < k.length; j++) {
+            F.prototype[key] = arguments[i].prototype[key]
+        }
+    }
+    child.prototype = new F()
+    child.prototype.constructor = child
+}
+
+function child1(param) {
+    parent1.call(this, param)
+    parent2.call(this, param)
+}
+subFn(child1, parent1, parent2)

@@ -28,6 +28,7 @@
             transition: all .2s ease;
             background-color: #fff;
             float: left;
+            text-align: justify;
         }
         
         .container ul::after {
@@ -89,6 +90,15 @@
             var li = document.querySelectorAll('li');
             var cur = 3;
             var arr = [];
+            var pre = document.querySelector('.pre');
+            var next = document.querySelector('.next');
+            var timer = null;
+            pre.addEventListener('click', function() {
+                change('prev')
+            })
+            next.addEventListener('click', function() {
+                change('next')
+            })
 
             function init() {
                 for (var i = 0; i < li.length; i++) {
@@ -101,14 +111,18 @@
                     }
                     arr.push(li[i].className)
                 }
-                return arr;
+                return arr
             }
 
-            function change() {
-                var timer = null;
-                clearInterval(null)
+            function change(dir) {
+                clearInterval(timer)
                 timer = setInterval(function() {
-                    arr.unshift(arr.pop())
+                    dir = dir ? dir : 'next'
+                    if (dir == 'next') {
+                        arr.unshift(arr.pop())
+                    } else {
+                        arr.push(arr.shift())
+                    }
                     li.forEach((item, index) => {
                         item.className = arr[index]
                     })
@@ -118,8 +132,9 @@
                     }
                 }, 3000)
             }
+
             arr = init();
-            change(arr)
+            change()
         })()
     </script>
 </body>

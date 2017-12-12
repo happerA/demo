@@ -1,0 +1,131 @@
+<html>
+
+<head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .tip {
+            position: fixed;
+            left: 10px;
+            bottom: 10px;
+            z-index: 1001;
+            -webkit-overflow-scrolling: touch;
+            max-width: 690px;
+            width: 260px;
+            padding: 10px;
+            background: #fff;
+            box-shadow: 0 0 10px #888;
+            border-radius: 4px;
+        }
+        
+        .tip-close {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+        }
+        
+        .tip-header {
+            text-align: center;
+            font-size: 25px;
+        }
+    </style>
+    <title>vue-tips</title>
+</head>
+
+<body>
+    <div class="app">
+        <p>v-tips</p>
+        <a href="#" @click="showTips">show</a>
+        <tips :tips-options="options" @yes="yes" ref="tip">
+            <div slot="body">
+                hello world
+            </div>
+        </tips>
+    </div>
+
+    <script src="https://unpkg.com/vue"></script>
+    <script type="text/template" id="tip">
+        <div class="tip" v-show="show" transition="fade">
+            <div class="tip-close" @click="closeTips">x</div>
+            <div class="tip-header">
+                <slot name="header">
+                    <p class="title">{{tips.title}}</p>
+                </slot>
+            </div>
+            <div class="tip-body">
+                <slot name="body">
+                    <p class="notice">{{tips.text}}</p>
+                </slot>
+            </div>
+            <div class="tip-footer">
+                <slot name="footer">
+                    <a herf="#" v-if="tips.showBtn" @click="yes">{{tips.btnText}}</a>
+                </slot>
+            </div>
+        </div>
+    </script>
+    <script>
+        Vue.component('tips', {
+            template: '#tip',
+            props: ['tipsOptions'],
+            data() {
+                return {
+                    show: false
+                }
+            },
+            computed: {
+                tips: {
+                    get() {
+                        let tips = this.tipsOptions
+                        tips = {
+                            title: tips.title || '提示',
+                            text: tips.text,
+                            showBtn: tips.showBtn || true,
+                            btnText: tip.btnText || 'ok'
+                        }
+                        return tips;
+                    }
+                }
+            },
+            methods: {
+                closeTips: function() {
+                    this.show = false
+                },
+                showTips: function() {
+                    this.show = true
+                },
+                yes: function() {
+                    this.closeTips()
+                    this.$emit('yes', {
+                        text: this.tips.text
+                    })
+                }
+            }
+        })
+        var app = new Vue({
+            el: '.app',
+            data: {
+                options: {
+                    title: 'tip'
+                }
+            },
+            methods: {
+                yes(args) {
+                    alert(JSON.stringify(args))
+                },
+                showTips() {
+                    this.$refs.tip.showTips()
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

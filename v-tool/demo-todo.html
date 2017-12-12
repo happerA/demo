@@ -1,0 +1,237 @@
+<html>
+
+<head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .tip {
+            position: fixed;
+            left: 10px;
+            bottom: 10px;
+            z-index: 1001;
+            -webkit-overflow-scrolling: touch;
+            max-width: 690px;
+            width: 260px;
+            padding: 10px;
+            background: #fff;
+            box-shadow: 0 0 10px #888;
+            border-radius: 4px;
+        }
+        
+        .tip-close {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+        }
+        
+        .tip-header {
+            text-align: center;
+            font-size: 25px;
+        }
+    </style>
+    <title>vue-todolist</title>
+</head>
+
+<body>
+    <div id="app">
+        <div class="searchBar">
+            search<input type='text' v-model="searchQuery" />
+        </div>
+        <simple-grid :data="fdata" :columns="gridColumn" :search-key="searchQuery" @edititem="edititem"></simple-grid>
+        <tips ref="tip" :tips-options="options" @yes="yes" @new="parent"></tips>
+        <button @click="createOne">new √</button>
+    </div>
+    <script type="text/template" id="grid">
+        <table>
+            <thead>
+                <tr>
+                    <th v-for="col in columns">
+                        {{ col | capitalize}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(entry, index) in data">
+                    <td v-for="col in columns">
+                        {{entry[col]}}
+                    </td>
+                    <td>
+                        <button @click="deleteItem(index)">×</button>
+                    </td>
+                    <td>
+                        <button @click="edititem(entry)">√</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </script>
+    <script type="text/template" id="tip">
+        <div class="tip" v-if="show" transition="fade">
+            <div class="tip-close" @click="closeTips">x</div>
+            <div class="tip-header">
+                <slot name="header">
+                    <p class="title">{{tips.title}}</p>
+                </slot>
+            </div>
+            <div class="tip-body">
+                <p>a<input type="text" name='name' :readonly="edit" v-model="text.a" /></p>
+                <p>b<input type="text" name="num" v-model="text.b" /></p>
+                <p>c<input type="text" name="sex" v-model="text.c" /></p>
+            </div>
+            <div class="tip-footer">
+                <slot name="footer">
+                    <a herf="#" @click="yes">ok</a>
+                </slot>
+            </div>
+        </div>
+    </script>
+    <script src="https://unpkg.com/vue"></script>
+    <script>
+        Vue.component('simple-grid', {
+            template: '#grid',
+            props: {
+                data: Array,
+                columns: Array,
+                searchKey: String
+            },
+            filters: {
+                capitalize: function(value) {
+                    if (!value) return ''
+                    value = value.toString()
+                    return value.charAt(0).toUpperCase() + value.slice(1)
+                }
+            },
+            methods: {
+                deleteItem(index) {
+                    return this.data.splice(index, 1)
+                },
+                edititem(data) {
+                    this.$emit('edititem', data)
+                }
+            }
+        });
+        Vue.component('tips', {
+            template: '#tip',
+            props: ['tipsOptions'],
+            data() {
+                return {
+                    show: false,
+                    edit: false,
+                    text: {},
+                }
+            },
+            computed: {
+                tips() {
+                    let tips = this.tipsOptions;
+                    return tips;
+                }
+            },
+            methods: {
+                closeTips: function() {
+                    this.show = false
+                    this.edit = false
+                    this.text = {}
+                },
+                showTips: function() {
+                    this.show = true
+                },
+                editone: function(args) {
+                    this.show = true
+                    this.edit = true
+                    this.text.a = args.a;
+                    this.text.b = args.b;
+                    this.text.c = args.c;
+                },
+                yes: function() {
+
+                    var data = {
+                        a: document.querySelectorAll('.tip-body input')[0].value,
+                        b: document.querySelectorAll('.tip-body input')[1].value,
+                        c: document.querySelectorAll('.tip-body input')[2].value,
+                    }
+
+                    if (this.edit) {
+                        this.$emit('new', data)
+                    } else {
+                        this.$emit('yes', {
+                            inp: data
+                        })
+                    }
+                    this.closeTips()
+                }
+            }
+        })
+        var demo = new Vue({
+            el: "#app",
+            data: {
+                searchQuery: '',
+                gridColumn: ['a', 'b', 'c'],
+                gridData: [{
+                    a: 'Jack',
+                    b: 30,
+                    c: 'Male'
+                }, {
+                    a: 'Bill',
+                    b: 26,
+                    c: 'Male'
+                }, {
+                    a: 'Tracy',
+                    b: 22,
+                    c: 'Female'
+                }, {
+                    a: 'Chris',
+                    b: 36,
+                    c: 'Male'
+                }],
+                options: {
+                    title: 'tip'
+                }
+            },
+            computed: {
+                fdata: function() {
+                    if (!this.searchQuery) {
+                        return this.gridData
+                    }
+                    var self = this;
+                    return this.gridData.filter(function(item) {
+                        return item.a.indexOf(self.searchQuery) >= 0
+                    })
+                }
+            },
+            methods: {
+                createOne() {
+                    this.$refs.tip.showTips()
+                },
+                yes(args) {
+                    this.gridData.push({
+                        a: args.inp.a,
+                        b: args.inp.b,
+                        c: args.inp.c
+                    })
+                },
+                parent(args) {
+                    console.log(0)
+                    this.gridData.map(function(item) {
+                        if (item.a === args.a) {
+                            item.b = args.b
+                            item.c = args.c
+                        }
+                    })
+                },
+                edititem(args) {
+                    this.$refs.tip.editone(args);
+                }
+            }
+
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>多行省略</title>
+    <style>
+        .ellipsis {
+            width: 100%;
+            max-height: 36px;
+            overflow: hidden;
+        }
+        
+        .ellipsis-content {
+            float: right;
+            width: 100%;
+            margin-left: -50px;
+            font-size: 12px;
+            line-height: 18px;
+            background: rgb(230, 230, 230);
+        }
+        
+        .ellipsis-placeholder {
+            float: right;
+            width: 50px;
+            background: red;
+            opacity: .3;
+            height: 36px;
+        }
+        
+        .ellipsis-more {
+            float: right;
+            width: 50px;
+            font-size: 12px;
+            height: 18px;
+            position: relative;
+            transform: translate(-100%, -100%);
+            background-image: linear-gradient(to right, rgba(230, 230, 230, .5), rgb(230, 230, 230));
+            bottom: 13px;
+            left: 100%;
+            text-align: right;
+            z-index: 2;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="ellipsis">
+        <div class="ellipsis-content">腾讯成立于1998年11月，是目前中国领先的互联网增值服务提供商之一。成立10多年来，腾讯一直秉承“一切以用户价值为依归”的经营理念，为亿级海量用户提供稳定优质的各类服务，始终处于稳健发展状态。2004年6月16日，腾讯控股有限公司在香港联交所主板公开上市(股票代号700)。</div>
+        <div class="ellipsis-placeholder"></div>
+        <div class="ellipsis-more">...更多</div>
+    </div>
+</body>
+
+</html>
